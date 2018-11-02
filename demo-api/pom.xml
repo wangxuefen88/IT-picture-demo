@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>com.dmsdbj.itoo</groupId>
+    <artifactId>demo-api</artifactId>
+    <version>1.0.7-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+
+    <parent>
+        <artifactId>demo-parent</artifactId>
+        <groupId>com.dmsdbj.itoo</groupId>
+        <version>1.0.7-SNAPSHOT</version>
+    </parent>
+
+
+    <dependencies>
+        <!-- 项目自身依赖start -->
+        <dependency>
+            <groupId>com.dmsdbj.itoo</groupId>
+            <artifactId>itoo-tool</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+    </dependencies>
+
+
+</project>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * fooGroup部门表
+ * @author 刘亚雯
+ * @version 1.0.0
+ * @since 1.0.0 2018-10-18 14:35:27
+-->
+
+<mapper namespace="com.dmsdbj.itoo.demo.provider.dao.FooGroupDao">
+    <resultMap id="BaseResultMap" type="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        <result column="id" property="id" jdbcType="CHAR"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+        <result column="is_delete" property="isDelete" jdbcType="TINYINT"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        operator,
+        is_delete,
+        dept_name,
+        remark,
+        create_time,
+        update_time,
+        parent_id
+    </sql>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_foo_group
+        where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+    </select>
+
+    <insert id="insertForce" parameterType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+    insert into t_foo_group (             
+                id,
+                operator,
+                is_delete,
+                dept_name,
+                remark,
+                create_time,
+                update_time,
+                parent_id)
+    values (
+				#{id,jdbcType=VARCHAR},
+				#{operator,jdbcType=VARCHAR},
+				#{isDelete,jdbcType=TINYINT},
+				#{deptName,jdbcType=VARCHAR},
+				#{remark,jdbcType=VARCHAR},
+				now(),
+				now(),
+				#{parentId,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insert" parameterType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        insert into t_foo_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="operator != null">
+                operator,
+            </if>
+            is_delete,
+            <if test="deptName != null">
+                dept_name,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+            update_time,
+            <if test="parentId != null">
+                parent_id
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>
+            0,
+            <if test="deptName != null">
+                #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+            <if test="parentId != null">
+                #{parentId,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertAll" parameterType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        insert into t_foo_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            operator,
+            is_delete,
+            dept_name,
+            remark,
+            create_time,
+            update_time,
+            parent_id
+        </trim>
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=VARCHAR},
+            #{item.operator,jdbcType=VARCHAR},
+            0,
+            #{item.deptName,jdbcType=VARCHAR},
+            #{item.remark,jdbcType=VARCHAR},
+            now(),
+            now(),
+            #{item.parentId,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.String">
+        update t_foo_group set is_delete = 1 , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+    </delete>
+
+    <delete id="deleteByIds">
+        update t_foo_group set is_delete = 1 , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+        where id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        ) and is_delete = 0
+    </delete>
+
+    <update id="updateById" parameterType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        update t_foo_group
+        <set>
+            <if test="operator !=null">
+                operator = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="isDelete !=null">
+                is_delete = #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="deptName !=null">
+                dept_name = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark !=null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId">
+                parent_id = #{parentId,jdbcType=VARCHAR}
+            </if>
+            update_time=now(),
+        </set>
+        where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+    </update>
+    <update id="updateForceById" parameterType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+    update t_foo_group
+    set 
+        operator = #{operator,jdbcType=VARCHAR},
+        is_delete = #{isDelete,jdbcType=TINYINT},
+        dept_name = #{deptName,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
+        update_time=now(),
+        parent_id = #{parentId,jdbcType=VARCHAR}		where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </update>
+
+    <!--查询所有fooGroup-->
+    <select id="queryAll" resultType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        SELECT
+            *
+        FROM
+            t_foo_group fg
+        WHERE
+            fg.is_delete = 0
+        ORDER BY
+	        fg.create_time DESC
+    </select>
+</mapper>

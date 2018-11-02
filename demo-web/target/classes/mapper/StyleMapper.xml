@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dmsdbj.itoo.demo.provider.dao.StyleDao">
+	<!--根据Style样式表模糊查询StyleEntity-->
+    <select id="queryLikeStyle" resultType="com.dmsdbj.itoo.demo.entity.StyleEntity">
+        SELECT
+			*
+        FROM
+			t_style f
+        WHERE
+			f.is_delete = 0
+        <if test="style !=''">
+            <bind name="pattern" value="'%' + style + '%'"/>
+            AND f.style LIKE #{pattern}
+        </if>
+        ORDER BY
+        f.create_time DESC
+    </select>
+
+</mapper>

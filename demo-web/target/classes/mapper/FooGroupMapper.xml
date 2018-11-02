@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dmsdbj.itoo.demo.provider.dao.FooGroupDao">
+    <!--查询所有的父类FooGroup-->
+    <select id="queryAllRoot" resultType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        SELECT
+            *
+        FROM
+            t_foo_group fg
+        WHERE
+            fg.is_delete = 0
+            AND fg.parent_id = 0
+        ORDER BY
+	        fg.create_time DESC
+    </select>
+
+    <!--根据父类id查询fooGroup-->
+    <select id="queryByParentId" resultType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        SELECT
+            *
+        FROM
+            t_foo_group fg
+        WHERE
+            fg.is_delete = 0
+            AND fg.parent_id =#{parentId}
+        ORDER BY
+	        fg.create_time DESC
+    </select>
+
+    <!-- 根据DeptName查找fooGroup -->
+    <select id="findByDeptName" resultType="com.dmsdbj.itoo.demo.entity.FooGroupEntity">
+        SELECT
+            *
+        FROM
+            t_foo_group fg
+        WHERE
+            fg.is_delete = 0
+            AND fg.dept_name =#{deptName}
+        ORDER BY
+	        fg.create_time DESC
+	    Limit 1
+    </select>
+
+</mapper>

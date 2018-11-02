@@ -1,0 +1,7 @@
+
+Usquid:UselessImportCheck"*Remove this unused import 'java.sql.Blob'.(пЪ¶г8ЫлЬщм,
+µ%squid:RedundantThrowsDeclarationCheck4"}Remove the declaration of thrown exception 'java.io.UnsupportedEncodingException', as it cannot be thrown from method's body.(АЅпЭ8шРЭщм,
+¦%squid:RedundantThrowsDeclarationCheck4"nRemove the declaration of thrown exception 'java.sql.SQLException', as it cannot be thrown from method's body.(АЅпЭ8шРЭщм,
+W
+squid:S106”"9Replace this use of System.out or System.err by a logger.(зцФћ8шРЭщм,
+osquid:UselessImportCheck"?Remove this unused import 'javax.sql.rowset.serial.SerialBlob'.(Заµыяяяя8ЫлЬщм,

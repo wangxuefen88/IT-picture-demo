@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--数据库连接设置-->
+    <!--数据库连接设置-->
+    <bean id="dataSource" class="com.p6spy.engine.spy.P6DataSource">
+        <constructor-arg ref="dataSourceDefault"/>
+    </bean>
+    <bean id="dataSourceDefault" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="${itoo_jdbc_url}"/>
+        <property name="username" value="${itoo_jdbc_username}"/>
+        <property name="password" value="${itoo_jdbc_password}"/>
+        <property name="maxActive" value="${itoo_jdbc_maxActive}"/>
+        <property name="initialSize" value="${itoo_jdbc_initialSize}"/>
+        <property name="maxWait" value="${itoo_jdbc_maxWait}"/>
+        <property name="minIdle" value="${itoo_jdbc_minIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${itoo_jdbc_timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${itoo_jdbc_minEvictableIdleTimeMillis}"/>
+        <property name="validationQuery" value="${itoo_jdbc_validationQuery}"/>
+        <property name="testWhileIdle" value="${itoo_jdbc_testWhileIdle}"/>
+        <property name="testOnBorrow" value="${itoo_jdbc_testOnBorrow}"/>
+        <property name="testOnReturn" value="${itoo_jdbc_testOnReturn}"/>
+        <property name="poolPreparedStatements" value="${itoo_jdbc_poolPreparedStatements}"/>
+        <property name="maxOpenPreparedStatements" value="${itoo_jdbc_maxOpenPreparedStatements}"/>
+        <property name="filters" value="stat,config"/>
+    </bean>
+
+    <!-- 对数据源进行事务管理 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven proxy-target-class="true"/>
+
+</beans>
+

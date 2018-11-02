@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dmsdbj.itoo.demo.provider.dao.FooDao">
+    <!-- 根据id查询FoolModel,因与base中的findById重复,所以写为findModelById -->
+    <select id="findModelById" resultType="com.dmsdbj.itoo.demo.model.FooModel">
+        SELECT
+            f.id,
+            f.user_code,
+            f.user_name,
+            f.sex,
+            f.tel_num,
+            f.start_time,
+            f.end_time,
+            fg.id AS fooGroupId,
+            fg.dept_name
+        FROM
+            t_foo f
+            LEFT JOIN t_foo_group fg ON f.foo_group_id = fg.id
+        WHERE
+            f.is_delete = 0
+            AND fg.is_delete = 0
+            AND f.id=#{id}
+        ORDER BY
+            f.create_time DESC
+    </select>
+
+    <!--查询所有Foo,因与base中的queryAll重复,所以写为queryAllModel -->
+    <select id="queryAllModel" resultType="com.dmsdbj.itoo.demo.model.FooModel">
+        SELECT
+            f.id,
+            f.user_code,
+            f.user_name,
+            f.sex,
+            f.tel_num,
+            f.start_time,
+            f.end_time,
+            fg.id AS fooGroupId,
+            fg.dept_name
+        FROM
+            t_foo f
+            LEFT JOIN t_foo_group fg ON f.foo_group_id = fg.id
+        WHERE
+            f.is_delete = 0
+            AND fg.is_delete = 0
+        ORDER BY
+        f.create_time DESC
+    </select>
+
+
+    <!--根据用户名查询用户信息-->
+    <select id="queryByUserCode" resultType="com.dmsdbj.itoo.demo.entity.FooEntity">
+        SELECT
+            f.*
+        FROM
+            t_foo f
+        WHERE
+            f.is_delete = 0
+            AND f.user_code = #{userCode}
+        ORDER BY
+	        f.create_time DESC
+    </select>
+
+    <!--根据foo姓名模糊查询FooModel-->
+    <select id="queryLikeName" resultType="com.dmsdbj.itoo.demo.model.FooModel">
+        SELECT
+        f.id,
+        f.user_code,
+        f.user_name,
+        f.sex,
+        f.tel_num,
+        f.start_time,
+        f.end_time,
+        fg.id AS fooGroupId,
+        fg.dept_name
+        FROM
+        t_foo f
+        LEFT JOIN t_foo_group fg ON f.foo_group_id = fg.id
+        WHERE
+        f.is_delete = 0
+        <if test="fooName !=''">
+            <bind name="pattern" value="'%' + fooName + '%'"/>
+            AND f.user_name LIKE #{pattern}
+        </if>
+        AND fg.is_delete = 0
+        ORDER BY
+        f.create_time DESC
+    </select>
+
+    <!--根据fooGroupId查询foo-->
+    <select id="queryByGroupId" resultType="com.dmsdbj.itoo.demo.model.FooModel">
+        SELECT
+            f.id,
+            f.user_code,
+            f.user_name,
+            f.sex,
+            f.tel_num,
+            f.start_time,
+            f.end_time,
+            fg.id AS fooGroupId,
+            fg.dept_name
+        FROM
+            t_foo f
+            LEFT JOIN t_foo_group fg ON f.foo_group_id = fg.id
+        WHERE
+            f.is_delete = 0
+            AND fg.is_delete = 0
+            AND f.foo_group_id = #{fooGroupId}
+        ORDER BY
+            f.create_time DESC
+    </select>
+
+    <!--根据groupId和时间段查询foo信息-->
+    <select id="queryByGroupIdAndDate" resultType="com.dmsdbj.itoo.demo.model.FooModel">
+        select
+            f.id,
+            f.user_code,
+            f.user_name,
+            f.sex,
+            f.tel_num,
+            f.start_time,
+            f.end_time,
+            fg.id AS fooGroupId,
+            fg.dept_name
+        from
+        t_foo f
+        LEFT JOIN t_foo_group fg ON f.foo_group_id = fg.id
+        where
+          f.is_delete = 0
+          AND fg.is_delete = 0
+          AND f.foo_group_id =#{groupId}
+          AND  f.start_time BETWEEN #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+         ORDER BY
+            f.create_time DESC
+    </select>
+
+    <!--查询最新的1条foo信息-->
+    <select id="queryNewFoo" resultType="com.dmsdbj.itoo.demo.model.FooInfoModel">
+        select
+	          f.id,
+            f.user_code,
+            f.user_name,
+            f.sex,
+            f.tel_num,
+            f.start_time,
+            f.end_time,
+            fg.id AS fooGroupId,
+            fg.dept_name
+        from
+        t_foo f
+        LEFT JOIN t_foo_group fg ON f.foo_group_id = fg.id
+        where
+          f.is_delete = 0
+          AND fg.is_delete = 0
+        ORDER BY
+          f.create_time DESC
+        LIMIT 1
+    </select>
+
+</mapper>

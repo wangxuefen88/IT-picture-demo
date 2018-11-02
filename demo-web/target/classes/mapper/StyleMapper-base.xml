@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * 富文本样式表
+ * @author 刘雅雯
+ * @version 1.0.0
+ * @since 1.0.0 2018-11-01 16:42:37
+-->
+
+<mapper namespace="com.dmsdbj.itoo.demo.provider.dao.StyleDao">
+    <resultMap id="BaseResultMap" type="com.dmsdbj.itoo.demo.entity.StyleEntity" >
+
+    <result column="id" property="id" jdbcType="VARCHAR" />    
+
+    <result column="style" property="style"  jdbcType="BLOB"/>
+
+    <result column="remark" property="remark" jdbcType="VARCHAR" />    
+
+    <result column="operator" property="operator" jdbcType="VARCHAR" />    
+
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />    
+
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+
+    </resultMap>
+ <sql id="Base_Column_List">
+    id,
+    style,
+    remark,
+    operator,
+    is_delete,
+    create_time,
+    update_time
+ </sql>  
+   <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_style
+        where id = #{id,jdbcType=VARCHAR}  and is_delete = 0
+    </select>     
+    <insert id="insertForce" parameterType="com.dmsdbj.itoo.demo.entity.StyleEntity" >
+    insert into t_style (             
+                id,
+                style,
+                remark,
+                operator,
+                is_delete,
+                create_time,
+                update_time)
+    values (
+				#{id,jdbcType=VARCHAR},
+				#{style,jdbcType=BLOB},
+				#{remark,jdbcType=VARCHAR},
+				#{operator,jdbcType=VARCHAR},
+				#{isDelete,jdbcType=TINYINT},
+				now(),
+				now())
+  </insert>   
+    <insert id="insert" parameterType="com.dmsdbj.itoo.demo.entity.StyleEntity">
+        insert into t_style
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>           
+            <if test="style != null">
+                style,
+            </if>           
+            <if test="remark != null">
+                remark,
+            </if>           
+            <if test="operator != null">
+                operator,
+            </if>           
+                is_delete,
+                create_time,
+                update_time        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>  
+            <if test="style != null">
+                #{style,jdbcType=BLOB},
+            </if>  
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>  
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>  
+                0,
+                now(),                       
+                now()        </trim>
+  </insert>  
+  <insert id="insertAll" parameterType="com.dmsdbj.itoo.demo.entity.StyleEntity">
+        insert into t_style
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                id,  
+                style,  
+                remark,  
+                operator,  
+                is_delete,  
+                create_time,  
+                update_time        </trim>        
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+                #{item.id,jdbcType=VARCHAR},
+                #{item.style,jdbcType=BLOB},
+                #{item.remark,jdbcType=VARCHAR},
+                #{item.operator,jdbcType=VARCHAR},
+                0,
+				now(),
+				now()        
+        )   
+        </foreach>                
+  </insert> 
+  <delete id="deleteById" parameterType="java.lang.String">
+    update t_style set is_delete = 1 , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </delete>
+  <delete id="deleteByIds">
+    update t_style set is_delete = 1  , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+    where id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )  and is_delete = 0
+  </delete>      
+  <update id="updateById" parameterType="com.dmsdbj.itoo.demo.entity.StyleEntity">
+        update t_style
+        <set>
+			<if test="style !=null">
+                style = #{style,jdbcType=BLOB},
+			</if>
+			<if test="remark !=null">
+                remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="operator !=null">
+                operator = #{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete !=null">
+                is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+                update_time=now()		</set>
+        where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </update>
+  <update id="updateForceById" parameterType="com.dmsdbj.itoo.demo.entity.StyleEntity">
+    update t_style
+    set 
+        style = #{style,jdbcType=BLOB},
+        remark = #{remark,jdbcType=VARCHAR},
+        operator = #{operator,jdbcType=VARCHAR},
+        is_delete = #{isDelete,jdbcType=TINYINT},
+        update_time=now()		where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </update>
+
+  <select id="queryAll"  resultType="com.dmsdbj.itoo.demo.entity.StyleEntity">
+        select
+			<include refid="Base_Column_List"/>
+        from 
+			t_style
+        where 
+			t_style.is_delete = 0
+		ORDER BY
+			t_style.create_time DESC
+    </select>	    
+</mapper>

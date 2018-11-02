@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * foo人员表
+ * @author 刘亚雯
+ * @version 1.0.0
+ * @since 1.0.0 2018-10-18 14:35:27
+-->
+
+<mapper namespace="com.dmsdbj.itoo.demo.provider.dao.FooDao">
+    <resultMap id="BaseResultMap" type="com.dmsdbj.itoo.demo.entity.FooEntity">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="user_code" property="userCode" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="tel_num" property="telNum" jdbcType="VARCHAR"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+        <result column="is_delete" property="isDelete" jdbcType="TINYINT"/>
+        <result column="foo_group_id" property="fooGroupId" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id,
+    user_code,
+    user_name,
+    sex,
+    tel_num,
+    operator,
+    is_delete,
+    foo_group_id,
+    remark,
+    start_time,
+    end_time,
+    create_time,
+    update_time
+ </sql>
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_foo
+        where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+    </select>
+    <insert id="insertForce" parameterType="com.dmsdbj.itoo.demo.entity.FooEntity">
+    insert into t_foo (             
+                id,
+                user_code,
+                user_name,
+                sex,
+                tel_num,
+                operator,
+                is_delete,
+                foo_group_id,
+                remark,
+                start_time,
+                end_time,
+                create_time,
+                update_time)
+    values (
+				#{id,jdbcType=VARCHAR},
+				#{userCode,jdbcType=VARCHAR},
+				#{userName,jdbcType=VARCHAR},
+				#{sex,jdbcType=VARCHAR},
+				#{telNum,jdbcType=VARCHAR},
+				#{operator,jdbcType=VARCHAR},
+				#{isDelete,jdbcType=TINYINT},
+				#{fooGroupId,jdbcType=VARCHAR},
+				#{remark,jdbcType=VARCHAR},
+				#{startTime,jdbcType=TIMESTAMP},
+				#{endTime,jdbcType=TIMESTAMP},
+				now(),
+				now())
+  </insert>
+    <insert id="insert" parameterType="com.dmsdbj.itoo.demo.entity.FooEntity">
+        insert into t_foo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userCode != null">
+                user_code,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="telNum != null">
+                tel_num,
+            </if>
+            <if test="operator != null">
+                operator,
+            </if>
+            is_delete,
+            <if test="fooGroupId != null">
+                foo_group_id,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            create_time,
+            update_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null">
+                #{userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="telNum != null">
+                #{telNum,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>
+            0,
+            <if test="fooGroupId != null">
+                #{fooGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            now(),
+            now()
+        </trim>
+    </insert>
+    <insert id="insertAll" parameterType="com.dmsdbj.itoo.demo.entity.FooEntity">
+        insert into t_foo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            user_code,
+            user_name,
+            sex,
+            tel_num,
+            operator,
+            is_delete,
+            foo_group_id,
+            remark,
+            start_time,
+            end_time,
+            create_time,
+            update_time
+        </trim>
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=VARCHAR},
+            #{item.userCode,jdbcType=VARCHAR},
+            #{item.userName,jdbcType=VARCHAR},
+            #{item.sex,jdbcType=VARCHAR},
+            #{item.telNum,jdbcType=VARCHAR},
+            #{item.operator,jdbcType=VARCHAR},
+            0,
+            #{item.fooGroupId,jdbcType=VARCHAR},
+            #{item.remark,jdbcType=VARCHAR},
+            #{item.startTime,jdbcType=TIMESTAMP},
+            #{item.endTime,jdbcType=TIMESTAMP},
+            now(),
+            now()
+            )
+        </foreach>
+    </insert>
+    <delete id="deleteById" parameterType="java.lang.String">
+    update t_foo set is_delete = 1 , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </delete>
+    <delete id="deleteByIds">
+        update t_foo set is_delete = 1 , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+        where id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        ) and is_delete = 0
+    </delete>
+    <update id="updateById" parameterType="com.dmsdbj.itoo.demo.entity.FooEntity">
+        update t_foo
+        <set>
+            <if test="userCode !=null">
+                user_code = #{userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userName !=null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex !=null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="telNum !=null">
+                tel_num = #{telNum,jdbcType=VARCHAR},
+            </if>
+            <if test="operator !=null">
+                operator = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="isDelete !=null">
+                is_delete = #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="fooGroupId !=null">
+                foo_group_id = #{fooGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark !=null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime !=null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime !=null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            update_time=now()
+        </set>
+        where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+    </update>
+    <update id="updateForceById" parameterType="com.dmsdbj.itoo.demo.entity.FooEntity">
+    update t_foo
+    set 
+        user_code = #{userCode,jdbcType=VARCHAR},
+        user_name = #{userName,jdbcType=VARCHAR},
+        sex = #{sex,jdbcType=VARCHAR},
+        tel_num = #{telNum,jdbcType=VARCHAR},
+        operator = #{operator,jdbcType=VARCHAR},
+        is_delete = #{isDelete,jdbcType=TINYINT},
+        foo_group_id = #{fooGroupId,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
+		start_time = #{startTime,jdbcType=TIMESTAMP},
+		end_time = #{endTime,jdbcType=TIMESTAMP},
+        update_time=now()		where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </update>
+</mapper>

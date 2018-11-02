@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * bar表缓存示例
+ * @author 刘雅雯
+ * @version 1.0.0
+ * @since 1.0.0 2018-10-26 09:48:45
+-->
+
+<mapper namespace="com.dmsdbj.itoo.demo.provider.dao.BarDao">
+    <resultMap id="BaseResultMap" type="com.dmsdbj.itoo.demo.entity.BarEntity">
+
+    <result column="id" property="id" jdbcType="VARCHAR" />    
+
+    <result column="bar_name" property="barName" jdbcType="VARCHAR" />    
+
+    <result column="remark" property="remark" jdbcType="VARCHAR" />    
+
+    <result column="operator" property="operator" jdbcType="VARCHAR" />    
+
+    <result column="description" property="description" jdbcType="VARCHAR" />    
+
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />    
+
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+
+    </resultMap>
+ <sql id="Base_Column_List">
+    id,
+    bar_name,
+    remark,
+    operator,
+    description,
+    is_delete,
+    create_time,
+    update_time
+ </sql>  
+   <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_bar
+        where id = #{id,jdbcType=VARCHAR}  and is_delete = 0
+    </select>     
+    <insert id="insertForce" parameterType="com.dmsdbj.itoo.demo.entity.BarEntity">
+    insert into t_bar (             
+                id,
+                bar_name,
+                remark,
+                operator,
+                description,
+                is_delete,
+                create_time,
+                update_time)
+    values (
+				#{id,jdbcType=VARCHAR},
+				#{barName,jdbcType=VARCHAR},
+				#{remark,jdbcType=VARCHAR},
+				#{operator,jdbcType=VARCHAR},
+				#{description,jdbcType=VARCHAR},
+				#{isDelete,jdbcType=TINYINT},
+				now(),
+				now())
+  </insert>   
+    <insert id="insert" parameterType="com.dmsdbj.itoo.demo.entity.BarEntity">
+        insert into t_bar
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>           
+            <if test="barName != null">
+                bar_name,
+            </if>           
+            <if test="remark != null">
+                remark,
+            </if>           
+            <if test="operator != null">
+                operator,
+            </if>           
+            <if test="description != null">
+                description,
+            </if>           
+                is_delete,
+                create_time,
+                update_time        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>  
+            <if test="barName != null">
+                #{barName,jdbcType=VARCHAR},
+            </if>  
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>  
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>  
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>  
+                0,
+                now(),                       
+                now()        </trim>
+  </insert>  
+  <insert id="insertAll" parameterType="com.dmsdbj.itoo.demo.entity.BarEntity">
+        insert into t_bar
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                id,  
+                bar_name,  
+                remark,  
+                operator,  
+                description,  
+                is_delete,  
+                create_time,  
+                update_time        </trim>        
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+                #{item.id,jdbcType=VARCHAR},
+                #{item.barName,jdbcType=VARCHAR},
+                #{item.remark,jdbcType=VARCHAR},
+                #{item.operator,jdbcType=VARCHAR},
+                #{item.description,jdbcType=VARCHAR},
+                0,
+				now(),
+				now()        
+        )   
+        </foreach>                
+  </insert> 
+  <delete id="deleteById" parameterType="java.lang.String">
+    update t_bar set is_delete = 1 , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </delete>
+  <delete id="deleteByIds">
+    update t_bar set is_delete = 1  , update_time=now() , operator = #{operator,jdbcType=VARCHAR}
+    where id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )  and is_delete = 0
+  </delete>      
+  <update id="updateById" parameterType="com.dmsdbj.itoo.demo.entity.BarEntity">
+        update t_bar
+        <set>
+            <if test="barName !=null">
+                bar_name = #{barName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark !=null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="operator !=null">
+                operator = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="description !=null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="isDelete !=null">
+                is_delete = #{isDelete,jdbcType=TINYINT},
+            </if>
+                update_time=now()
+        </set>
+        where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </update>
+  <update id="updateForceById" parameterType="com.dmsdbj.itoo.demo.entity.BarEntity">
+    update t_bar
+    set 
+        bar_name = #{barName,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
+        operator = #{operator,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
+        is_delete = #{isDelete,jdbcType=TINYINT},
+        update_time=now()		where id = #{id,jdbcType=VARCHAR} and is_delete = 0
+  </update>
+
+  <select id="queryAll"  resultType="com.dmsdbj.itoo.demo.entity.BarEntity">
+        select
+			<include refid="Base_Column_List"/>
+        from 
+			t_bar
+        where 
+			t_bar.is_delete = 0
+		ORDER BY
+			t_bar.create_time DESC
+    </select>	    
+</mapper>

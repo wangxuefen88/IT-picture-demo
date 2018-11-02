@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--web-->
+    <import resource="classpath:spring/spring-mvc.xml"/>
+    <import resource="classpath:spring/spring-profile.xml"/>
+
+    <!--service-->
+    <import resource="classpath:spring/spring-context.xml"/>
+    <import resource="classpath:spring/spring-redis.xml"/>
+    <import resource="classpath:spring/spring-dubbo.xml"/>
+    <import resource="classpath:spring/spring-db.xml"/>
+    <import resource="classpath:spring/spring-mybatis.xml"/>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="1"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:config.properties</value>
+            </list>
+        </property>
+        <property name="fileEncoding" value="UTF-8"/>
+    </bean>
+
+</beans>
